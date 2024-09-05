@@ -41,7 +41,7 @@ class RestaurantAnonymousTests(BaseTestCase):
         })
         self.assertStatusCode(response, status.HTTP_401_UNAUTHORIZED)
 
-    def test_retrieve(self):
+    def test_delete(self):
         obj = RestaurantFactory()
         response = self.api_client.delete(f"{URL}/{obj.pk}")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -99,7 +99,7 @@ class RestaurantTests(BaseTestCase):
         self.restaurant_3 = RestaurantFactory(name="Valaries")
 
         self.force_login(self.user)
-    
+
         # Create the crontab schedule
         schedule, _ = CrontabSchedule.objects.get_or_create(
             minute='0',
@@ -108,7 +108,7 @@ class RestaurantTests(BaseTestCase):
             day_of_month='*',
             month_of_year='*'
         )
-        
+
         # Create the periodic task
         self.periodic_task = PeriodicTask.objects.create(
             name='Reset User Daily Votes',
@@ -117,14 +117,13 @@ class RestaurantTests(BaseTestCase):
             enabled=True
         )
 
-
     def test_user_vote(self):
         """
         add vote - testing increase restuarant by 1 for self.user's first
         vote and increase by 0.5 for second vote.
         """
 
-        # users profile daily_votes are defaulted at 10 for now 
+        # users profile daily_votes are defaulted at 10 for now
         self.assertEqual(self.user.profile.daily_votes, 10)
 
         response = self.api_client.post(f"{URL}/{self.restaurant_1.pk}/vote")
@@ -223,7 +222,7 @@ class RestaurantTests(BaseTestCase):
         starting with 0.5 then 1
         """
 
-        # users profile daily_votes are defaulted at 10 for now 
+        # users profile daily_votes are defaulted at 10 for now
         self.assertEqual(self.user.profile.daily_votes, 10)
 
         response = self.api_client.post(f"{URL}/{self.restaurant_1.pk}/vote")
@@ -279,19 +278,20 @@ class RestaurantTests(BaseTestCase):
 
     def test_most_voted_restaurant(self):
         """
-        scenario: self.restaurant_2 should win because it has 4 points and more unique voters
-        ----------------------------------------------------------------------------------------------------------|
-                          | self.user               | self.user_2             | self.user_3          | Total      |
-        ----------------------------------------------------------------------------------------------------------|
-        self.restaurant_1 | 4 votes worth 2 points  | 4 votes worth 2 points  | 0                    | 4.0 points |
-                          | (1 + 0.5 + 0.25 + 0.25) | (1 + 0.5 + 0.25 + 0.25) |                      |            |
-        ----------------------------------------------------------------------------------------------------------|
-        self.restaurant_2 | 4 votes worth 2 points  | 1 vote worth 1 point    | 1 vote worth 1 point | 4.0 points |
-                          | (1 + 0.5 + 0.25 + 0.25) | (1)                     | (1)                  |            |
-        ----------------------------------------------------------------------------------------------------------|
-        self.restaurant_3 | 0                       | 0                       | 1 vote worth 1 point | 1.0 points |
-                          |                         |                         | (1)                  |            |
-        ----------------------------------------------------------------------------------------------------------|
+        scenario: self.restaurant_2 should win because
+        it has 4 points and more unique voters
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
+                          | self.user               | self.user_2             | self.user_3          | Total      |  # noqa: E501
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
+        self.restaurant_1 | 4 votes worth 2 points  | 4 votes worth 2 points  | 0                    | 4.0 points |  # noqa: E501
+                          | (1 + 0.5 + 0.25 + 0.25) | (1 + 0.5 + 0.25 + 0.25) |                      |            |  # noqa: E501
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
+        self.restaurant_2 | 4 votes worth 2 points  | 1 vote worth 1 point    | 1 vote worth 1 point | 4.0 points |  # noqa: E501
+                          | (1 + 0.5 + 0.25 + 0.25) | (1)                     | (1)                  |            |  # noqa: E501
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
+        self.restaurant_3 | 0                       | 0                       | 1 vote worth 1 point | 1.0 points |  # noqa: E501
+                          |                         |                         | (1)                  |            |  # noqa: E501
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
         """
 
         # 4 votes by self.user for self.restaurant_1 and self.restaurant_2
@@ -324,18 +324,18 @@ class RestaurantTests(BaseTestCase):
         """
         scenario: self.restaurant_1 and self.restaurant_2 should win
         because they have the highest points and same unique voters
-        ----------------------------------------------------------------------------------------------------------|
-                          | self.user               | self.user_2             | self.user_3          | Total      |
-        ----------------------------------------------------------------------------------------------------------|
-        self.restaurant_1 | 4 votes worth 2 points  | 4 votes worth 2 points  | 0                    | 4.0 points |
-                          | (1 + 0.5 + 0.25 + 0.25) | (1 + 0.5 + 0.25 + 0.25) |                      |            |
-        ----------------------------------------------------------------------------------------------------------|
-        self.restaurant_2 | 4 votes worth 2 points  | 4 vote worth 2 point    | 0                    | 4.0 points |
-                          | (1 + 0.5 + 0.25 + 0.25) | (1)                     |                      |            |
-        ----------------------------------------------------------------------------------------------------------|
-        self.restaurant_3 | 0                       | 0                       | 1 vote worth 1 point | 1.0 points |
-                          |                         |                         | (1)                  |            |
-        ----------------------------------------------------------------------------------------------------------|
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
+                          | self.user               | self.user_2             | self.user_3          | Total      |  # noqa: E501
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
+        self.restaurant_1 | 4 votes worth 2 points  | 4 votes worth 2 points  | 0                    | 4.0 points |  # noqa: E501
+                          | (1 + 0.5 + 0.25 + 0.25) | (1 + 0.5 + 0.25 + 0.25) |                      |            |  # noqa: E501
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
+        self.restaurant_2 | 4 votes worth 2 points  | 4 vote worth 2 point    | 0                    | 4.0 points |  # noqa: E501
+                          | (1 + 0.5 + 0.25 + 0.25) | (1)                     |                      |            |  # noqa: E501
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
+        self.restaurant_3 | 0                       | 0                       | 1 vote worth 1 point | 1.0 points |  # noqa: E501
+                          |                         |                         | (1)                  |            |  # noqa: E501
+        ----------------------------------------------------------------------------------------------------------|  # noqa: E501
         """
 
         # 4 votes by self.user for self.restaurant_1 and self.restaurant_2
@@ -370,13 +370,13 @@ class RestaurantTests(BaseTestCase):
         RestaurantVoteFactory(
             profile=self.user.profile,
             restaurant=self.restaurant_1,
-            date=date(2024,2,1),
+            date=date(2024, 2, 1),
             total=15
         )
         RestaurantVoteFactory(
             profile=self.user.profile,
             restaurant=self.restaurant_2,
-            date=date(2024,2,2),
+            date=date(2024, 2, 2),
             total=10
         )
 
@@ -387,7 +387,6 @@ class RestaurantTests(BaseTestCase):
         response = self.api_client.get(f"{URL}/most_voted?date=2024-02-02")
         data = self.assertStatusCode(response, status.HTTP_200_OK)
         self.assertEqual(data[0]["total_votes"], 10)
-        
 
     @patch("apps.profiles.tasks.reset_daily_votes_for_all_profles.apply_async")
     def test_reset_daily_votes_for_all_profles(self, mock_start_task):
@@ -395,7 +394,7 @@ class RestaurantTests(BaseTestCase):
         def check_and_run_task(current_time):
             if not self.is_task_due(current_time):
                 return False
-            
+
             set_config_value("USER_DAILY_VOTES", 10)
             task = app.tasks[self.periodic_task.task]
             task.run()
@@ -403,7 +402,7 @@ class RestaurantTests(BaseTestCase):
 
         # Test before midnight
         with freeze_time("2024-09-05 23:59:59"):
-            # users profile daily_votes are defaulted at 10 for now 
+            # users profile daily_votes are defaulted at 10 for now
             self.assertEqual(self.user.profile.daily_votes, 10)
             self.api_client.post(f"{URL}/{self.restaurant_1.pk}/vote")
 
@@ -413,7 +412,7 @@ class RestaurantTests(BaseTestCase):
 
             # user's daily_votes should decrease by 1
             self.assertEqual(self.user.profile.daily_votes, 8)
-        
+
         # Test at midnight
         with freeze_time("2024-09-06 00:00:00"):
             # Simulate Celery beat checking for due tasks

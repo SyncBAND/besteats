@@ -21,7 +21,7 @@ class TestDjRestAuthOverrides(BaseTestCase):
             "password2": "power123!",
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    
+
     def test_factory_create_integrity_error(self):
 
         with self.assertRaises(IntegrityError) as duplicate_error:
@@ -33,7 +33,7 @@ class TestDjRestAuthOverrides(BaseTestCase):
             "duplicate key"
             in duplicate_error.exception.args[0]
         )
-    
+
     def test_api_create_unique_constraint_error(self):
 
         # try to create the same account twice via the api
