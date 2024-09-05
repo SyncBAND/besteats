@@ -5,35 +5,38 @@ name: Run Tests
 on: [push]
 
 jobs:
-  deploy:
+  tests:
     runs-on: [ubuntu-latest]
 
     steps:
+      - name: Install Docker Compose
+        uses: docker/compose-cli@v2
+
       - uses: actions/checkout@v2
       - name: Build Postgres service
         run: |
           cp example.env .env
-          docker-compose up -d postgres
+          docker compose up -d postgres
     
       - name: Build Redis service
         run: |
-          docker-compose up -d redis
+          docker compose up -d redis
 
       - name: Build Django image
         run: |
           
-          docker-compose up --build --exit-code-from app
+          docker compose up --build --exit-code-from app
 
       - name: Build Django service
         run: |
           cp example.env .env
-          docker-compose up -d backend
+          docker compose up -d backend
 
       - name: Run Django migrations
         run: |
-          docker-compose exec backend ./manage.py migrate
+          docker compose exec backend ./manage.py migrate
 
       - name: Run Django tests
         run: |
-          docker-compose exec backend sh -c "coverage run --source='.' ./manage.py test && coverage report -m --omit=*/tests/*,*/migrations/*,*manage.py,*wsgi.py,*asgi.py"
+          docker compose exec backend sh -c "coverage run --source='.' ./manage.py test && coverage report -m --omit=*/tests/*,*/migrations/*,*manage.py,*wsgi.py,*asgi.py"
       
