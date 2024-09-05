@@ -2,8 +2,6 @@ import factory
 
 from django.conf import settings
 
-from apps.profiles.tests.factory.profile import ProfileFactory
-
 
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
