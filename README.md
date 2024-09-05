@@ -73,16 +73,16 @@ Please ensure you have Docker Compose installed. If not, you can get it [here](h
 * [http://localhost:8000/api/swagger](http://localhost:8000/api/swagger) to access the swagger
 * [http://localhost:8000/admin](http://localhost:8000/admin) to access the admin
 
-1. We'll be using Postman because we're abe to update `environment variables` using scripts
-2. Import the `besteats.postman_collection.json` and `besteats.postman_environment.json` files found in the root folder. See [here](https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-data/) or [here](https://apidog.com/articles/how-to-import-json-files-into-postman/) to see how to import the files.
-3. Navigate to `Beatseats/authentication/registration` and register at least 3 users using the `http://{{base_url}}/api/auth/registration/` endpoint
-4. Navigate to `Beatseats/restaurants/create`, update the `Body` and create at least 3 restaurants.
-5. Now we can cast votes on the latest restaurant i.e. `{restaurant_id}`, that is created using `Beatseats/restaurants/vote`
-6. We can cast votes on other restaurants by changing the `{restaurant_id}` env variable or updating the URL - `http://{{base_url}}/api/restaurants/{{restaurant_id}}/vote`. Use the `Beatseats/restaurants/list` to get the restaurant IDs.
-7. Users can unvote from restaurants using `Beatseats/restaurants/unvote`
-8. Users can also view the restaurant or restaurants with the most votes today using `Beatseats/restaurants/most_voted`
-9. To see previous winners on a specific date, update the `query params` using `date` as the key and the value must be in the following format `YYYY-MM-DD`, e.g. `http://{{base_url}}/api/restaurants/most_voted?date=2024-07-10`
-10. Login as a different user using `Beatseats/authentication/login` to cast more votes
+1. We'll be using Postman because we're able to update `environment variables` using scripts
+2. Import the `besteats.postman_collection.json` and `besteats.postman_environment.json` files found in the root folder. See [here](https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-data/) or [here](https://apidog.com/articles/how-to-import-json-files-into-postman/) for guidance on how to import the files.
+3. Navigate to `Besteats/authentication/registration` and register at least 3 users using the `http://{{base_url}}/api/auth/registration/` endpoint
+4. Navigate to `Besteats/restaurants/create`, update the `Body` and create at least 3 restaurants.
+5. Now we can cast votes on the latest created restaurant i.e. `{restaurant_id}`, using `Besteats/restaurants/vote`
+6. We can cast votes on other restaurants by changing the `{restaurant_id}` env variable or updating the URL - `http://{{base_url}}/api/restaurants/{{restaurant_id}}/vote`. Use the `Besteats/restaurants/list` to get the restaurant IDs.
+7. Users can unvote from restaurants using `Besteats/restaurants/unvote`
+8. Users can also view the restaurant or restaurants with the most votes today using `Besteats/restaurants/most_voted`
+9. To view the previos winner(s) on a specific date, update the `query params` using `date` as the key and the value should be in the following format `YYYY-MM-DD`, e.g. `http://{{base_url}}/api/restaurants/most_voted?date=2024-07-10`
+10. Login as a different user using `Besteats/authentication/login` to cast more votes
 11. To reset the daily user votes, we can use the managemnent command `docker-compose run --rm backend ./manage.py reset_daily_votes_for_all_profles` or wait until the next day.
 12. Try replicate the scenario in the tests `test_most_voted_restaurant` and `test_most_voted_restaurants` both found in `besteats/apps/restaurants/tests/integration/test_restaurant_views`
 13. Note: only users who created a restaurant and staff can make updates to it.
