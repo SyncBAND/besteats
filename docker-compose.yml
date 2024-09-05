@@ -1,0 +1,59 @@
+version: "3"
+services:
+  backend:
+    build: 
+      context: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - 127.0.0.1:${PORT}:${PORT}
+    command: sh -c "/app/entrypoint.sh" $PORT $WORKERS
+    depends_on:
+      - postgres
+      - redis
+
+  celery:
+    build: 
+      context: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - 127.0.0.1:5679:5679
+    command: sh -c /app/entrypoint-celery.sh
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    build: 
+      context: ./postgres
+    command: sh -c "/wait && docker-entrypoint.sh postgres"
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:${POSTGRES_PORT}:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+
+volumes:
+  pgdata:
+  redisdata:

@@ -1,0 +1,13 @@
+[flake8]
+ignore =
+    E128,
+    E503,
+    W503
+
+exclude =
+    env/,
+    */migrations/*.py,
+    .git
+
+max-complexity = 5
+max-line-length = 80
