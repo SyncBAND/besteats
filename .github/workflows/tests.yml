@@ -27,6 +27,10 @@ jobs:
           
           docker compose build
 
+      - name: Run Flake 8
+        run: |
+          docker compose exec backend flake8
+
       - name: Build Django service
         run: |
           cp example.env .env
@@ -36,7 +40,6 @@ jobs:
         run: |
           docker compose exec backend ./manage.py migrate
 
-      - name: Run Django tests
+      - name: Run Django tests with coverage
         run: |
           docker compose exec backend sh -c "coverage run --source='.' ./manage.py test && coverage report -m --omit=*/tests/*,*/migrations/*,*manage.py,*wsgi.py,*asgi.py"
-      
