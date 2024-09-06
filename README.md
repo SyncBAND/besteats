@@ -1,6 +1,6 @@
 # Besteats
 
-Besteats is a allows users to cast votes for restaurants.
+Besteats allows users to cast votes on restaurants.
 
 Django 5 pre-configured with the following side-services and libraries:
 

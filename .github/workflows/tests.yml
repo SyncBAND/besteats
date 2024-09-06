@@ -32,11 +32,14 @@ jobs:
           cp example.env .env
           docker compose up -d backend
 
+      - name: Run Flake 8
+        run: |
+          docker compose exec backend flake8
+
       - name: Run Django migrations
         run: |
           docker compose exec backend ./manage.py migrate
 
-      - name: Run Django tests
+      - name: Run Django tests with coverage
         run: |
           docker compose exec backend sh -c "coverage run --source='.' ./manage.py test && coverage report -m --omit=*/tests/*,*/migrations/*,*manage.py,*wsgi.py,*asgi.py"
-      
